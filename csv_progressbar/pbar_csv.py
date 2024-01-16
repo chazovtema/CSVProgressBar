@@ -3,12 +3,12 @@ from typing import TypeAlias
 from io import TextIOWrapper
 import csv
 from csv import Dialect
-from dataclasses import dataclass
 
 from .pbar_protocol import PbarProtocol
 
 _DialectLike: TypeAlias = str | Dialect | type[Dialect]
 _QuotingType: TypeAlias = int
+
 
 def read_with_pbar(csvfile: TextIOWrapper,
         pbar: PbarProtocol,
@@ -23,6 +23,22 @@ def read_with_pbar(csvfile: TextIOWrapper,
         lineterminator: str = "\r\n",
         quoting: _QuotingType = 0,
         strict: bool = False):
+    
+    """
+    csv reader as from the original library, 
+    additionally gets a progress bar object 
+    and the number of rows after which the update occurs
+
+    ProgressBar object must have `update` method
+    ```
+    pbar = MyPbar(...) 
+    with open('my_file.csv') as csvfile:
+        reader = read_with_pbar(csvfile, pbar)
+        for row in reader:
+            ...
+    ```
+    
+    """
     
     fd = csvfile.fileno()
     readed_rows = 0
