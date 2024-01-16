@@ -26,7 +26,7 @@ def iter_csv(csvfile: TextIOWrapper,
     
     fd = csvfile.fileno()
     readed_rows = 0
-    last_position = 0
+    last_pos = 0
     reader = csv.reader(csvfile, 
                                  dialect, 
                                  delimiter= delimiter,
@@ -37,23 +37,23 @@ def iter_csv(csvfile: TextIOWrapper,
                                  lineterminator = lineterminator,
                                  quoting= quoting,
                                  strict= strict)
-
+    
     for row in reader:
         readed_rows += 1
         if readed_rows == update_rate:
+            readed_rows = 0
             pos = os.lseek(fd, 0, os.SEEK_CUR)
-            last_pos = last_position
             if last_pos != pos:
                 pbar.update(pos - last_pos)
-                last_position = pos
-                readed_rows = 0
+                last_pos = pos
         yield row
         
     if readed_rows != 0:
         pos = os.lseek(fd, 0, os.SEEK_CUR)
-        last_pos = last_position
+        last_pos = last_pos
         if last_pos != pos:
             pbar.update(pos - last_pos)
+            
 
 class PbarCSV:
     
@@ -83,16 +83,6 @@ class PbarCSV:
                                 lineterminator = lineterminator,
                                 quoting= quoting,
                                 strict= strict)
-        # self.reader = csv.reader(csvfile, 
-        #                          dialect, 
-        #                          delimiter= delimiter,
-        #                          quotechar= quotechar,
-        #                          escapechar= escapechar,
-        #                          doublequote= doublequote,
-        #                          skipinitialspace= skipinitialspace,
-        #                          lineterminator = lineterminator,
-        #                          quoting= quoting,
-        #                          strict= strict)
         
     def __next__(self):
         return next(self.reader)
