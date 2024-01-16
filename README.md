@@ -4,7 +4,7 @@ This package provides a progress bar wrapper for the standard csv library
 
 # Usage
 
-To use csv reader you must specify  `ProgressBar object`, witch must have **update** method and 
+To use csv reader you must specify  `ProgressBar object`, witch must have **update** method: 
 
 ```python
 from csv_progress_bar import read_with_pbar
